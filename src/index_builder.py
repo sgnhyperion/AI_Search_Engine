@@ -12,12 +12,16 @@ def buildInvertedIndex(input_path, output_path):
         
     for doc in document:
         tokens = doc["tokens"]
+        doc_id = doc["doc_id"]
         
-        for token in set(tokens):
+        for token in tokens:
             if token not in indexed_doc:
-                indexed_doc[token] = [doc["doc_id"]]
+                indexed_doc[token] = {doc_id: 1}
             else:
-                indexed_doc[token].append(doc["doc_id"])
+                if doc_id in indexed_doc[token]:
+                    indexed_doc[token][doc_id] += 1
+                else:
+                    indexed_doc[token][doc_id] = 1
     
     os.makedirs("storage/index", exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
