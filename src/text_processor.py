@@ -39,7 +39,7 @@ def process_text(text):
     processed_tokens = []
 
     for token in tokens:
-        # 4. Keep only alphabetic words
+        # 4. Keep only alphabetic words : removing punctuation
         if token.isalpha():
             # 5. Remove Stopwords
             if token not in stop_words:
