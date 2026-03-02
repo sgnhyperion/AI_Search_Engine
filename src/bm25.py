@@ -3,7 +3,7 @@ import json
 
 class BM25:
     def __init__(self, index_path, metadata_path, k1=1.5, b=0.75):
-        with open(index_path, "r", encoding="utd-8") as f:
+        with open(index_path, "r", encoding="utf-8") as f:
             self.index = json.load(f)
             
         with open(metadata_path, "r", encoding="utf-8") as f:

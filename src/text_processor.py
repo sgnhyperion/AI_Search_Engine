@@ -9,7 +9,7 @@ stop_words = set(stopwords.words("english"))
 stemmer = PorterStemmer()
 
 
-def process_text(text):
+def preprocess_text(text):
     """
     1. load raw data
     2. Lowercase
@@ -60,7 +60,7 @@ def process_dataset(input_path, output_path):
     processed_docs = []
 
     for doc in documents:
-        tokens = process_text(doc["text"])
+        tokens = preprocess_text(doc["text"])
 
         processed_doc = {
             "doc_id": doc["doc_id"],
@@ -80,4 +80,4 @@ if __name__ == "__main__":
     process_dataset("data/raw/ag_news.json", "data/processed/processed_ag_news.json")
 
 
-# process_text("A paragraph is a distinct, self-contained unit of writing comprising one or more sentences that develop a single, central idea")
+# preprocess_text("A paragraph is a distinct, self-contained unit of writing comprising one or more sentences that develop a single, central idea")
