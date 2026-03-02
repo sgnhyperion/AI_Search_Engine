@@ -26,4 +26,27 @@ class BM25:
         
         return math.log((self.total_docs - df + 0.5)/(df + 0.5) +1)
     
-    
+    def score(self, query_tokens):
+        scores = {}
+        
+        for term in query_tokens:
+            if term not in self.index:
+                continue
+            
+            idf = self.compute_idf(term)
+            posting_list = self.index[term]
+            
+            for doc_id, tf in posting_list.items():
+                doc_length = self.doc_lengths[str(doc_id)]
+                
+                numerator = tf*(self.k1 +1)
+                denominator = tf + self.k1*(1 - self.b + self.b*(doc_length/self.avg_doc_length))
+                
+                term_score = idf*(numerator/denominator)
+                
+                if doc_id not in scores:
+                    scores[doc_id] = term_score
+                else:
+                    scores[doc_id] += term_score
+                    
+        return scores
