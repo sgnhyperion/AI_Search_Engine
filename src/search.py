@@ -21,5 +21,5 @@ if __name__ == "__main__":
         results = search(query)
         
         for doc_id, score in results:
-            print(f"Doc ID: {doc_id}, Score: {score:.4f}, sent: ")
+            print(f"Doc ID: {doc_id}, Score: {score:.4f}")
     
