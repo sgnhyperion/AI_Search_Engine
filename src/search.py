@@ -1,5 +1,5 @@
-from text_processor import preprocess_text
-from bm25 import BM25
+from src.text_processor import preprocess_text
+from src.bm25 import BM25
 
 bm25 = BM25(
     "storage/index/ag_news_index.json",
