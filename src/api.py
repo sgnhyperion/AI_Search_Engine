@@ -31,11 +31,20 @@ def home():
 @app.get("/search")
 def search_endpoint(q: str, top_k: int = 10):
     results  = search(q, top_k)
+    formatted_results = []
+    
+    for doc_id, score in results:
+        text = doc_lookup[int(doc_id)]
+        snippet = generate_snippet(text, q)
+        
+        formatted_results.append({
+            "doc_id": doc_id,
+            "score": score,
+            "snippet": snippet,
+            "text": text
+        })
     
     return {
         "query": q,
-        "results": [
-            {"doc_id": doc_id, "score": score}
-            for doc_id, score in results
-        ]
+        "results": formatted_results
     }
