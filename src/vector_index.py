@@ -5,7 +5,6 @@
 import os
 import json
 from sentence_transformers import SentenceTransformer
-import pandas as pd
 import faiss
 from tqdm import tqdm
 import numpy as np
@@ -15,11 +14,11 @@ model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 def generate_embeddings(texts):
     
-    embeddings = []
-    
-    for text in tqdm(texts, desc="Generating embeddings"):
-        emb = model.encode(text)
-        embeddings.append(emb)
+    embeddings = model.encode(
+        texts,
+        batch_size=256,
+        show_progress_bar=True
+    )
         
     return embeddings
 
@@ -40,7 +39,6 @@ def build_faiss_index(input_path, output_path, doc_ids_path):
     
     print("Number of documents:", len(formatted_input))
     
-    # dataframe = pd.DataFrame(formatted_input, columns=['text'])
     embeddings = np.array(generate_embeddings(formatted_input)).astype("float32")
     
     vector_dimension = embeddings.shape[1]
