@@ -1,6 +1,6 @@
 import faiss
 import json
-from vector_index import generate_embeddings
+from src.vector_index import generate_embeddings
 import numpy as np
 
 index = faiss.read_index("storage/vector_index/faiss.index")

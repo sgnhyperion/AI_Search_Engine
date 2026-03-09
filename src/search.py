@@ -6,7 +6,7 @@ bm25 = BM25(
     "storage/metadata/ag_news_metadata.json"
 )
 
-def search(query, top_k=10):
+def search(query, top_k=5):
     query_tokens = preprocess_text(query)
     
     scores = bm25.score(query_tokens)
@@ -20,6 +20,5 @@ if __name__ == "__main__":
         query = input("Enter your search query: ")
         results = search(query)
         
-        for doc_id, score in results:
-            print(f"Doc ID: {doc_id}, Score: {score:.4f}")
+        print(results)
     

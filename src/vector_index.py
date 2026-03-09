@@ -6,7 +6,6 @@ import os
 import json
 from sentence_transformers import SentenceTransformer
 import faiss
-from tqdm import tqdm
 import numpy as np
 
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
