@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.search import search
+from src.hybrid_search import hybrid_search
 import json
 
 app = FastAPI()
@@ -30,7 +30,7 @@ def home():
 
 @app.get("/search")
 def search_endpoint(q: str, top_k: int = 10):
-    results  = search(q, top_k)
+    results  = hybrid_search(q, top_k)
     formatted_results = []
     
     for doc_id, score in results:
