@@ -7,7 +7,7 @@ bm25 = BM25(
     "storage/metadata/ag_news_metadata.json"
 )
 
-def search(query, top_k=5):
+def search(query, top_k=10):
     query_tokens = preprocess_text(query)
     
     scores = bm25.score(query_tokens)
@@ -16,11 +16,4 @@ def search(query, top_k=5):
     ranked = heapq.nlargest(top_k, scores.items(), key=lambda x:x[1])
     
     return ranked
-
-if __name__ == "__main__":
-    while True:
-        query = input("Enter your search query: ")
-        results = search(query)
-        
-        print(results)
     

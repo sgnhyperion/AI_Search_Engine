@@ -1,19 +1,20 @@
 # User query
 # ↓
-# 1️⃣ run BM25 search -> top 50 docs
-# 2️⃣ run vector search -> top 50 docs
-# 3️⃣ merge candidate docs
-# 4️⃣ normalize scores -> [bm25: (bm25/max(bm25), similarity: (1/(1+distance))]
-# 5️⃣ compute hybrid score -> α * normalized_bm25 + β * semantic_similarity : (α = 0.7, β = 0.3)
-# 6️⃣ return ranked results
+# 1️ run BM25 search -> top 50 docs
+# 2️ run vector search -> top 50 docs
+# 3️ merge candidate docs
+# 4️ normalize scores -> [bm25: (bm25/max(bm25), similarity: (1/(1+distance))]
+# 5️ compute hybrid score -> α * normalized_bm25 + β * semantic_similarity : (α = 0.7, β = 0.3)
+# 6️ return ranked results
 
 import heapq
 from src.search import search
 from src.vector_search import vector_search
 from src.vector_index import generate_embeddings
+from src.reranker import rerank
 
 
-def hybrid_search(query, k=10, alpha=0.7, beta=0.3):
+def hybrid_search(query, doc_lookup, k=10, alpha=0.7, beta=0.3):
     n = 10 * k
 
     bm25_result = search(query, n)
@@ -38,9 +39,11 @@ def hybrid_search(query, k=10, alpha=0.7, beta=0.3):
 
         results.append((doc, hybrid_score))
 
-    results = heapq.nlargest(k, results, key=lambda x: x[1])
+    results = heapq.nlargest(int(n / 2), results, key=lambda x: x[1])
+    rerank_result = rerank(results, query, doc_lookup, k)
+    print(rerank_result)
 
-    return results
+    return rerank_result
 
 
 if __name__ == "__main__":
