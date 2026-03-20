@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from src.hybrid_search import hybrid_search
+from src.text_processor import preprocess_text
 import json
+from collections import defaultdict
 
 app = FastAPI()
 
@@ -10,18 +12,52 @@ with open("data/raw/ag_news.json", "r", encoding="utf-8") as f:
 doc_lookup = {doc["doc_id"]: doc["text"] for doc in documents}
 
 
+from collections import Counter
+
 def generate_snippet(text, query, window=60):
-    text_lower = text.lower()
-    query_words = query.lower().split()
+    words = text.lower().split()
+    query_words = preprocess_text(query)
 
-    for word in query_words:
-        pos = text_lower.find(word)
-        if pos != -1:
-            start = max(0, pos - window)
-            end = min(len(text), pos + window)
-            return text[start:end] + "..."
+    if not words:
+        return ""
 
-    return text[:120] + "..."
+    query_set = set(query_words)
+
+    left = 0
+    curr_score = 0
+    max_score = 0
+    best_start = 0
+
+    # initialize first window
+    for right in range(min(window, len(words))):
+        if words[right] in query_set:
+            curr_score += 1
+
+    max_score = curr_score
+    best_start = 0
+
+    # slide window
+    for right in range(window, len(words)):
+        
+        # remove left word
+        if words[left] in query_set:
+            curr_score -= 1
+        left += 1
+
+        # add right word
+        if words[right] in query_set:
+            curr_score += 1
+
+        # update best window
+        if curr_score > max_score:
+            max_score = curr_score
+            best_start = left
+
+    # extract snippet
+    best_end = best_start + window
+    snippet = " ".join(words[best_start:best_end])
+
+    return snippet + "..."
 
 
 @app.get("/")
