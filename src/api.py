@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from src.hybrid_search import hybrid_search
 from src.text_processor import preprocess_text
+from src.rag import generate_answer
 import json
-from collections import defaultdict
+
+# from collections import defaultdict
 
 app = FastAPI()
 
@@ -13,6 +15,7 @@ doc_lookup = {doc["doc_id"]: doc["text"] for doc in documents}
 
 
 from collections import Counter
+
 
 def generate_snippet(text, query, window=60):
     words = text.lower().split()
@@ -38,7 +41,7 @@ def generate_snippet(text, query, window=60):
 
     # slide window
     for right in range(window, len(words)):
-        
+
         # remove left word
         if words[left] in query_set:
             curr_score -= 1
@@ -66,7 +69,7 @@ def home():
 
 
 @app.get("/search")
-def search_endpoint(q: str, top_k: int = 10):
+def search_endpoint(q: str, top_k: int = 5):
     results = hybrid_search(q, doc_lookup, top_k)
     formatted_results = []
 
@@ -79,3 +82,8 @@ def search_endpoint(q: str, top_k: int = 10):
         )
 
     return {"query": q, "results": formatted_results}
+
+
+@app.get("/ask")
+def ask(q: str):
+    return generate_answer(q, doc_lookup)
