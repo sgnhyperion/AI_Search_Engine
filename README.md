@@ -93,6 +93,8 @@ curl "http://localhost:8000/search?q=artificial+intelligence&top_k=3"
 curl "http://localhost:8000/ask?q=What+is+machine+learning?"
 ```
 
+All endpoints can also be tested interactively via the Swagger UI at `http://localhost:8000/docs`.
+
 ## Project Structure
 
 ```
