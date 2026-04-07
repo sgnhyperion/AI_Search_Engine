@@ -31,7 +31,7 @@ Query
 ### 1. Clone & install dependencies
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/sgnhyperion/AI_Search_Engine
 cd AI_Search_Engine
 pip install -r requirements.txt
 ```
@@ -68,8 +68,7 @@ python src/vector_index.py
 ### 4. (Optional) Set up Ollama for RAG
 
 ```bash
-ollama pull deepseek-r1:7b
-ollama serve   # starts on http://localhost:11434
+ollama run deepseek-r1:7b
 ```
 
 ### 5. Start the API server
